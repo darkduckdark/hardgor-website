@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸運號碼產生器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #result {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #ffffff;
+            background-color: rgb(255, 129, 79);
+        }
+        #history {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #333;
+        }
+        #counter {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>幸運號碼產生器</h1>
+    <button onclick="generateNumbers()">抽 6 個號碼</button>
+    <div id="result"></div>
+    <div id="counter">按鈕點擊次數：0</div>
+    <div id="history">
+        <h2>抽號紀錄：</h2>
+        <ul id="history-list"></ul>
+    </div>
+
+    <script>
+        let clickCount = 0; // 用於記錄按鈕點擊次數
+
+        function generateRandomNumbers(min, max, count) {
+            const uniqueNumbers = new Set();
+            while (uniqueNumbers.size < count) {
+                const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+                uniqueNumbers.add(randomNumber);
+            }
+            // 將 Set 轉為陣列並排序
+            return Array.from(uniqueNumbers).sort((a, b) => a - b);
+        }
+
+        function generateNumbers() {
+            // 增加按鈕點擊次數
+            clickCount++;
+            updateCounter();
+
+            // 生成 6 個不重複的隨機數字並排序
+            const numbers = generateRandomNumbers(1, 49, 6);
+
+            // 顯示本次抽中的號碼
+            const resultElement = document.getElementById("result");
+            resultElement.textContent = "幸運號碼：" + numbers.join(", ");
+
+            // 將本次結果加入紀錄（新到舊）
+            addToHistory(numbers);
+        }
+
+        function addToHistory(numbers) {
+            const historyList = document.getElementById("history-list");
+            const listItem = document.createElement("div");
+            listItem.textContent = numbers.join(", ");
+            // 將新結果插入到最上方
+            historyList.insertBefore(listItem, historyList.firstChild);
+        }
+
+        function updateCounter() {
+            const counterElement = document.getElementById("counter");
+            counterElement.textContent = "按鈕點擊次數：" + clickCount;
+        }
+    </script>
+</body>
+</html>
